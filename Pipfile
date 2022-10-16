@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+redis = "*"
+pillow = "*"
+mysqlclient = "*"
+python-dotenv = "*"
+django-debug-toolbar = "*"
+celery = {extras = ["redis"], version = "*"}
+django-simple-captcha = "*"
+freezegun = "*"
+gevent = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

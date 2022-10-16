@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!--- Post info --->
+<div class="post">
+    <div class="post__title">
+        <h1>{{ post.title }}</h1>
+    </div>
+    <div class="post__content">
+        {{ post.content }}
+    </div>
+    <div class="post__author">
+        <h4><a href="{% url 'users:profile' post.author.username %}">Author: {{ post.author }}</a></h4>
+    </div>
+    <div class="post_date">
+        Posted: {{ post.published_date }}
+        {% if post.last_change_date != post.published_date %}
+            <p>Last Change Date: {{ post.last_change_date }}
+        {% endif %}
+    </div>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="like">Like {{ post.likes.count }}</button>
+        </form>
+    </div>
+</div>
+
+<br>
+
+{% if user == post.author %}
+    <div>
+        <form method="post" action="{% url 'forum:post_delete' post.pk %}">
+            {% csrf_token %}
+            <input type="submit" value="Delete">
+        </form>
+        <a href="{% url 'forum:post_edit' post.pk %}">Edit</a>
+    </div>
+{% endif %}
+
+<!--- Comment form --->
+{% if user.is_authenticated %}
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <p>{{ field }}</p>
+        {% endfor %}
+        {% if form.errors %}
+            {% for err in form.errors %}
+                {{ err }}
+            {% endfor %}
+        {% endif %}
+        <input type="submit" value="Post">
+    </form>
+{% endif %}
+
+<!--- Comments  --->
+{% for comment in page_obj.object_list %}
+<div>
+    <p>{{ comment.text }}</p>
+    <p>{{ comment.author__username }}</p>
+    <p>{{ comment.published_date }}</p>
+</div>
+<hr>
+{% endfor %}
+
+<!--- Pagination --->
+{% if page_obj.has_other_pages %}
+    {% for page_number in paginator.page_range %}
+        {% if page_number == page_obj.number %}
+            {{ page_number }}
+        {% elif page_number >= page_obj.number|add:-3 and page_number <= page_obj.number|add:5 %}
+            <a href="?page={{ page_number }}">{{ page_number }}</a>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% endblock %}
