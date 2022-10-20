@@ -1,11 +1,9 @@
-import time
-
 from django.contrib.auth.hashers import make_password
 from django.test import TestCase
 from django.urls import reverse
 from .models import CustomUserModel, EmailCode
 from captcha.conf import settings as captcha_conf
-from forum.celery import app
+from project.celery import app
 
 
 def create_user(username='testUser', email='test@gmail.com', password='password123', email_confirmed=True):

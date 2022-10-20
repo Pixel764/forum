@@ -1,5 +1,5 @@
 from django.template.loader import render_to_string
-from forum.celery import app
+from project.celery import app
 from django.conf import settings
 from django.core.mail import send_mail
 from .models import EmailCode
