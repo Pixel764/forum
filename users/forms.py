@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm, PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
@@ -8,8 +8,9 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from captcha.fields import CaptchaField
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from .models import CustomUserModel, EmailCode
+from .models import CustomUserModel
 from .tasks import send_email
+
 
 UserModel = get_user_model()
 

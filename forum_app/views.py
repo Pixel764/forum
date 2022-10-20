@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.http import Http404, HttpResponseRedirect
 from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_POST
 from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView
 from django.views.generic.edit import FormMixin
 from .models import Post
@@ -97,6 +98,7 @@ class PostEditView(UpdateView):
             raise Http404
 
 
+@method_decorator(require_POST, name='dispatch')
 class PostDeleteView(DeleteView):
     model = Post
     pk_url_kwarg = 'post_pk'
@@ -107,9 +109,6 @@ class PostDeleteView(DeleteView):
             return super(PostDeleteView, self).dispatch(request, *args, **kwargs)
         else:
             raise Http404
-
-    def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('forum:homepage'))
 
     def form_valid(self, form):
         messages.add_message(self.request, messages.SUCCESS, 'Post was successfully deleted')
