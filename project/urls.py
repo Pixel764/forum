@@ -23,7 +23,7 @@ urlpatterns = [
     path('user/', include('users.urls')),
     path('user/', include('django.contrib.auth.urls')),
     path('captcha/', include('captcha.urls')),
-    path('', include('forum_app.urls')),
+    path('', include('forum.urls')),
 ]
 
 if settings.DEBUG:

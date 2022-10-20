@@ -6,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import CreateView, DetailView, UpdateView, FormView, TemplateView
-from forum_app.models import Post
+from forum.models import Post
 from .forms import SignUpForm, ChangeEmailForm, LoginForm, ProfileVerificationForm, CustomPasswordResetForm
 from django.contrib.auth import views as auth_views
 from django.contrib.auth import login, get_user_model

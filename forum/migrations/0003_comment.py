@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('forum_app', '0002_post_last_change_date_post_published_date'),
+        ('forum', '0002_post_last_change_date_post_published_date'),
     ]
 
     operations = [
@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('text', models.TextField(max_length=1500)),
                 ('published_date', models.DateTimeField(auto_now_add=True)),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='forum_app.post')),
+                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='forum.post')),
             ],
         ),
     ]

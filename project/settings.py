@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.forms',
 
-    'forum_app',
+    'forum',
     'users',
     'debug_toolbar',
     'captcha',

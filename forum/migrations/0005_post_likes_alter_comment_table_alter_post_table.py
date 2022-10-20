@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('forum_app', '0004_alter_comment_options_alter_post_options'),
+        ('forum', '0004_alter_comment_options_alter_post_options'),
     ]
 
     operations = [
