@@ -4,15 +4,8 @@
 
 <form method="post">
     {% csrf_token %}
-    {% for field in form %}
-        <p>{{ field.label }}: {{ field }}</p>
-        {% if field.errors %}
-            {% for err in field.errors %}
-                {{ err }}
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
-    <input type="submit" value="Confirm">
+    {% include 'form/fields_render.html' %}
+    <input class="btn btn-success mt-2 mb-3" type="submit" value="Confirm">
 </form>
 
 <p>Didn't get the message? <a href="{% url 'users:email_confirm' 'send' %}">Resend code</a></p>

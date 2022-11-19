@@ -6,6 +6,7 @@ app_name = 'users'
 urlpatterns = [
     path('signup/', views.SignUpView.as_view(), name='signup'),
     path('login/', views.AuthenticationView.as_view(), name='login'),
+    path('logout/', views.LogoutView.as_view(), name='logout'),
     path('email/<str:status>/', views.ConfirmEmailView.as_view(), name='email_confirm'),
     path('profile/settings/', views.ProfileEditView.as_view(), name='profile_edit'),
     path('profile/<str:username>/', views.ProfileView.as_view(), name='profile'),
@@ -21,7 +22,7 @@ urlpatterns = [
     path('password_change/done/', views.CustomPasswordChangeDoneView.as_view(), name='password_change_done'),
 
     # Change email
-    path('email_change/verification/', views.ChangeEmailView.as_view(), name='email_change_verification'),
+    path('email_change/verification/', views.ProfileVerificationView.as_view(), name='email_change_verification'),
     path('email_change/confirm/', views.ChangeEmailConfirmView.as_view(), name='email_change_confirm'),
     path('email_change/new_email/<str:status>/', views.ConfirmNewEmailView.as_view(),
          name='email_change_confirm_new_email'),

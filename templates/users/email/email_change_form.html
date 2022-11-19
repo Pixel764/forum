@@ -4,15 +4,8 @@
 
 <form method="post">
     {% csrf_token %}
-    {% for field in form %}
-        <p>{{ field.label }}: {{ field }}</p>
-        {% if field.errors %}
-            {% for err in field.errors %}
-                <p>{{ err }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
-    <input type="submit" value="Continue">
+    {% include 'form/fields_render.html' %}
+    <input class="btn btn-success mt-2" type="submit" value="Continue">
 </form>
 
 {% endblock %}

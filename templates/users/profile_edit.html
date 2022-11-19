@@ -3,17 +3,10 @@
 {% block content %}
 
 <form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {% for field in form %}
-    <p>{{ field.label }}
-    <p>{{ field }}</p>
-    {% if field.errors %}
-      {% for err in field.errors %}
-        <p>{{ err }}</p>
-      {% endfor %}
-    {% endif %}
-  {% endfor %}
-  <input type="submit" value="Save settings">
+    {% csrf_token %}
+    {% include 'form/fields_render.html' %}
+    <input disabled class="d-block w-25" value="{{ user.email }}">
+    <input class="btn btn-success mt-3" type="submit" value="Save changes">
 </form>
 
 <br>

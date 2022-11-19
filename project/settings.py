@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import os
 from pathlib import Path
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.forms',
 
+    'main',
     'forum',
     'users',
     'debug_toolbar',
@@ -129,8 +131,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 # Media files (Users uploaded files)
 MEDIA_URL = '/media/'
@@ -144,8 +148,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUserModel'
 
 # Auth redirects
-LOGIN_REDIRECT_URL = 'forum:homepage'
-LOGOUT_REDIRECT_URL = 'forum:homepage'
+LOGIN_REDIRECT_URL = 'main:homepage'
+LOGOUT_REDIRECT_URL = 'main:homepage'
 
 LOGIN_URL = 'users:login'
 
@@ -157,15 +161,7 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
-# Cache
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379',
-    }
-}
-
-# Captcha
+# Django simple captcha
 CAPTCHA_LENGTH = 5
 CAPTCHA_TEST_MODE = DEBUG
 
@@ -183,3 +179,13 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 # Sites
 SITE_ID = 1
+
+# Messages
+MESSAGE_TAGS = {
+    messages.INFO: 'alert-secondary',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+    messages.SUCCESS: 'alert-success',
+    messages.DEBUG: 'alert-dark',
+}
+

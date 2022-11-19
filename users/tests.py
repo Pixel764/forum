@@ -134,7 +134,7 @@ class PasswordResetViewTest(TestCase):
         self.assertContains(response, 'Check your email')
 
 
-class ChangeEmailViewTest(TestCase):
+class ProfileVerificationViewTest(TestCase):
     def setUp(self) -> None:
         self.user = create_user()
 

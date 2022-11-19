@@ -5,15 +5,14 @@ from users.models import CustomUserModel
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
-    content = models.TextField()
+    content = models.TextField(max_length=10000)
     published_date = models.DateTimeField(auto_now_add=True)
     last_change_date = models.DateTimeField(auto_now=True)
-    author = models.ForeignKey(to=CustomUserModel, on_delete=models.CASCADE)
-    likes = models.ManyToManyField(to=CustomUserModel, related_name='liked_posts')
+    author = models.ForeignKey(to=CustomUserModel, on_delete=models.CASCADE, blank=True)
+    likes = models.ManyToManyField(to=CustomUserModel, related_name='liked_posts', blank=True)
 
     class Meta:
         ordering = ['-published_date']
-        db_table = 'forum_post'
 
     def __str__(self):
         return self.title
@@ -30,10 +29,9 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['-published_date']
-        db_table = 'forum_comment'
 
     def __str__(self):
         return self.text
 
     def get_absolute_url(self):
-        return reverse('post_page', kwargs={'post_pk': self.post.pk})
+        return reverse('forum:post_page', kwargs={'post_pk': self.post.pk})

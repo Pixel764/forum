@@ -28,8 +28,8 @@ class EmailChangeAccess:
         if 'new_email' in session_keys:
             if resolve(request.path).url_name != 'email_change_confirm_new_email':
                 del request.session['new_email']
-        if 'access_change_email' in session_keys and request.session['access_change_email']:
+        if 'access_change_email' in session_keys:
             if resolve(request.path).url_name != 'email_change_confirm':
-                request.session['access_change_email'] = False
+                del request.session['access_change_email']
         response = self._get_response(request)
         return response

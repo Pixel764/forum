@@ -1,29 +1,36 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 
 {% if user.is_authenticated %}
-    <a href="{% url 'forum:post_create' %}">Create post</a>
+<div class="mt-2 mb-1">
+    <a class="btn btn-success" href="{% url 'forum:post_create' %}">Add post</a>
+</div>
 {% endif %}
 
-<div class="posts_list">
+<div>
     {% if posts %}
         {% for post in posts %}
-            <p><a href="{% url 'forum:post_page' post.pk %}">{{ post.title }}</a>
+            <div class="border border-secondary rounded mt-2 mb-2 pt-1 pb-1 ps-2">
+                <a href="{% url 'forum:post_page' post.pk %}">{{ post.title }}</a>
+            </div>
         {% endfor %}
     {% else %}
-        <p>There are no posts yet.</p>
+        <h3 class="text-center">There are no posts yet.</h3>
     {% endif %}
 </div>
 
 {% if page_obj.has_other_pages %}
-    {% for page_number in paginator.page_range %}
-        {% if page_number == page_obj.number %}
-            {{ page_number }}
-        {% elif page_number >= page_obj.number|add:-3 and page_number <= page_obj.number|add:5 %}
-            <a href="?page={{ page_number }}">{{ page_number }}</a>
-        {% endif %}
-    {% endfor %}
+    <div class="border bg-dark text-white mt-4 p-1">
+        {% for page_number in paginator.page_range %}
+            {% if page_number == page_obj.number %}
+                <span class="ms-2">{{ page_number }}</span>
+            {% elif page_number >= page_obj.number|add:-3 and page_number <= page_obj.number|add:5 %}
+                <a class="btn btn-warning ms-2" href="?page={{ page_number }}">{{ page_number }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
 {% endif %}
 
 {% endblock %}

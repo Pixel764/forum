@@ -4,13 +4,20 @@
 
 <form method="post">
     {% csrf_token %}
-    {% for field in form %}
-        <p>{{ field.label }}: {{ field }}</p>
-        {% if field.errors %}
-            {{ field.errors }}
-        {% endif %}
-    {% endfor %}
-    <input type="submit" value="Create">
+    {% include 'form/fields_render.html' %}
+    <input name="button" class="btn btn-success mt-4" type="submit">
 </form>
+
+<script>
+    const form = document.forms[0]
+    const textArea = form.elements['content']
+
+    if (textArea.value){
+        form.button.value = 'Edit'
+    }
+    else{
+        form.button.value = 'Create'
+    }
+</script>
 
 {% endblock %}

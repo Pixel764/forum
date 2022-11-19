@@ -1,0 +1,7 @@
+{% load i18n %}
+<div class="d-flex">
+    {% spaceless %}
+        <img src="{{ image }}" alt="captcha" class="captcha border me-1" />
+    {% endspaceless %}
+    {% include "django/forms/widgets/multiwidget.html" %}
+</div>
