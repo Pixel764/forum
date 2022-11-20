@@ -31,53 +31,54 @@ ALLOWED_HOSTS = ['127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.sites',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.forms',
+	'django.contrib.sites',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'django.forms',
 
-    'main',
-    'forum',
-    'users',
-    'debug_toolbar',
-    'captcha',
+	'main',
+	'forum',
+	'users',
+	'debug_toolbar',
+	'captcha',
+	'ckeditor',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'users.middleware.CheckEmailStatus',
-    'users.middleware.EmailChangeAccess'
+	'django.middleware.security.SecurityMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'debug_toolbar.middleware.DebugToolbarMiddleware',
+	'users.middleware.CheckEmailStatus',
+	'users.middleware.EmailChangeAccess'
 ]
 
 ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates')
-        ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [
+			os.path.join(BASE_DIR, 'templates')
+		],
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+			],
+		},
+	},
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
@@ -87,32 +88,32 @@ FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.mysql',
+		'NAME': os.environ.get('DB_NAME'),
+		'USER': os.environ.get('DB_USER'),
+		'PASSWORD': os.environ.get('DB_PASSWORD'),
+		'HOST': os.environ.get('DB_HOST'),
+		'PORT': os.environ.get('DB_PORT'),
+	}
 }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
 
 PASSWORD_RESET_TIMEOUT = 600
@@ -133,8 +134,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+	os.path.join(BASE_DIR, 'static'),
 ]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Media files (Users uploaded files)
 MEDIA_URL = '/media/'
@@ -167,7 +169,7 @@ CAPTCHA_TEST_MODE = DEBUG
 
 # Debug toolbar
 INTERNAL_IPS = [
-    '127.0.0.1'
+	'127.0.0.1'
 ]
 
 # Celery'
@@ -182,10 +184,33 @@ SITE_ID = 1
 
 # Messages
 MESSAGE_TAGS = {
-    messages.INFO: 'alert-secondary',
-    messages.WARNING: 'alert-warning',
-    messages.ERROR: 'alert-danger',
-    messages.SUCCESS: 'alert-success',
-    messages.DEBUG: 'alert-dark',
+	messages.INFO: 'alert-secondary',
+	messages.WARNING: 'alert-warning',
+	messages.ERROR: 'alert-danger',
+	messages.SUCCESS: 'alert-success',
+	messages.DEBUG: 'alert-dark',
 }
 
+# Ckeditor
+CKEDITOR_BASEPATH = STATIC_URL + 'ckeditor/ckeditor/'
+CKEDITOR_UPLOAD_PATH = 'ckeditor/'
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
+CKEDITOR_CONFIGS = {
+	'default': {
+		'skin': 'n1theme',
+		'toolbar': 'Custom',
+		'width': '100%',
+		'toolbar_Custom': [
+			[
+				'Styles', 'Font', 'Format', 'FontSize', 'TextColor', 'BGColor', '-', 'Bold', 'Italic', 'Underline',
+				'Strike', 'Subscript', 'Superscript',
+			],
+			'/',
+			[
+				'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+				'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Link', 'Unlink'
+			]
+		],
+		'removePlugins': ['uploadimage', 'image']
+	}
+}

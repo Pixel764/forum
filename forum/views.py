@@ -42,7 +42,6 @@ class PostPageView(FormMixin, DetailView):
 			self.object.comment_set.values('author__username', 'author__id', 'pk', 'text', 'published_date'),
 			self.paginate_by
 		)
-		context['post_content_in_list'] = self.object.content.split('\n')
 		context['page_obj'] = self.get_page_obj(context['paginator'], self.request.GET.get('page', 1))
 		return context
 

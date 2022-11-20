@@ -14,6 +14,7 @@ celery = {extras = ["redis"], version = "*"}
 django-simple-captcha = "*"
 freezegun = "*"
 gevent = "*"
+django-ckeditor = "*"
 
 [dev-packages]
 
