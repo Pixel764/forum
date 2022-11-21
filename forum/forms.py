@@ -1,6 +1,5 @@
 from django import forms
 from .models import Post, Comment
-from ckeditor.fields import CKEditorWidget
 
 
 class CreateAndEditPostForm(forms.ModelForm):
@@ -10,8 +9,6 @@ class CreateAndEditPostForm(forms.ModelForm):
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            #'content': forms.Textarea(attrs={'class': 'form-control inline-block', 'style': 'resize:none'})
-            'content': CKEditorWidget(attrs={'style': 'width: 100%;'})
         }
 
 

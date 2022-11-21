@@ -1,11 +1,12 @@
 from django.db import models
 from django.urls import reverse
 from users.models import CustomUserModel
+from ckeditor.fields import RichTextField
 
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
-    content = models.TextField(max_length=20000)
+    content = RichTextField(max_length=20000)
     published_date = models.DateTimeField(auto_now_add=True)
     last_change_date = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(to=CustomUserModel, on_delete=models.CASCADE, blank=True)

@@ -12,14 +12,15 @@ class PostAdminPanel(admin.ModelAdmin):
     search_help_text = 'Search by id'
     sortable_by = ['published_date']
 
+    class Media:
+        js = (
+            'js/jquery.js',
+        )
+
     def save_model(self, request, obj, form, change):
         if not request.POST['author']:
             obj.author = request.user
         return super(PostAdminPanel, self).save_model(request, obj, form, change)
-
-    def delete_queryset(self, request, queryset):
-        for i in queryset:
-            i.delete()
 
 
 @admin.register(Comment)
