@@ -1,7 +1,5 @@
 # Forum site
 
-!*Without mobile adaptation*
-
 ### Site on python *( django )*
 
 **Install and run virtual environment**
@@ -14,7 +12,7 @@
 - bootstrap
 - Mysql
 - django `4.1.3`
-    - ckeditor
+    - django-ckeditor
     - django-simple-captcha
     - django-debug-toolbar
     - django-rest-framework
