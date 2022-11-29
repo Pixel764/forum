@@ -17,6 +17,7 @@
     - ckeditor
     - django-simple-captcha
     - django-debug-toolbar
+    - django-rest-framework
 - Celery
 - Redis 
 - Javascript
