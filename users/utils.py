@@ -1,5 +1,3 @@
-import os
-
 from .models import EmailCode
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site

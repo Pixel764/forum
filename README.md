@@ -2,10 +2,12 @@
 
 !*Without mobile adaptation*
 
+### Site on python *( django )*
+
 **Install and run virtual environment**
 > pipenv shell
 
-**Install requirements**
+**Install dependencies**
 > pipenv install
 
 ## Tools used 

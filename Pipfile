@@ -15,6 +15,7 @@ django-simple-captcha = "*"
 freezegun = "*"
 gevent = "*"
 django-ckeditor = "*"
+djangorestframework = "*"
 
 [dev-packages]
 

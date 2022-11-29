@@ -116,7 +116,7 @@ class ChangeEmailForm(forms.Form):
 
     def clean_new_email(self):
         new_email = self.cleaned_data['new_email']
-        if CustomUserModel.objects.filter(email=new_email).exists():
+        if UserModel.objects.filter(email=new_email).exists():
             raise ValidationError('User with this email already exist')
         else:
             return new_email
@@ -133,7 +133,7 @@ class CustomPasswordChangeForm(PasswordChangeForm):
 class CustomPasswordResetForm(forms.Form):
     email = forms.EmailField(
         label='Email',
-        max_length=254,
+        max_length=50,
         widget=forms.EmailInput(attrs={'class': 'form-control'}),
     )
 

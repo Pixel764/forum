@@ -1,3 +1,4 @@
+from django.utils import timezone
 from forum.models import Post
 from django.views.generic import ListView
 
@@ -9,4 +10,4 @@ class HomepageView(ListView):
 	paginate_by = 30
 
 	def get_queryset(self):
-		return Post.objects.all().values('title', 'pk')
+		return Post.objects.filter(published_date__lte=timezone.now()).values('title', 'pk')

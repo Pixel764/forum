@@ -39,13 +39,13 @@ INSTALLED_APPS = [
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
 	'django.forms',
-
 	'main',
 	'forum',
 	'users',
 	'debug_toolbar',
 	'captcha',
 	'ckeditor',
+	'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -214,3 +214,15 @@ CKEDITOR_CONFIGS = {
 		'removePlugins': ['uploadimage', 'image']
 	}
 }
+
+# Django rest framework
+REST_FRAMEWORK = {
+	'DEFAULT_RENDERER_CLASSES': (
+		'rest_framework.renderers.JSONRenderer',
+	)
+}
+
+if DEBUG:
+	REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = (
+		'rest_framework.renderers.JSONRenderer', 'rest_framework.renderers.BrowsableAPIRenderer'
+	)

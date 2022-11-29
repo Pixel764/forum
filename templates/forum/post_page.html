@@ -44,6 +44,8 @@
         {% include 'form/fields_render.html' %}
         <input class="btn btn-secondary mt-2" type="submit" value="Post">
     </form>
+{% else %}
+    <p class="mt-2 mb-2"><a href="{% url 'users:login' %}">Login</a> for post comment!</p>
 {% endif %}
 
 <!-- Comments -->
