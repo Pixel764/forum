@@ -13,6 +13,7 @@ class Post(models.Model):
     likes = models.ManyToManyField(to=CustomUserModel, related_name='liked_posts', blank=True)
 
     class Meta:
+        db_table = 'posts'
         ordering = ['-published_date']
 
     def __str__(self):
@@ -29,6 +30,7 @@ class Comment(models.Model):
     published_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        db_table = 'comments'
         ordering = ['-published_date']
 
     def __str__(self):
