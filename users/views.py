@@ -43,6 +43,11 @@ class SignUpView(EmailConfirmationCode, CreateView):
 		self.send_email_code(self.object.email)
 		return HttpResponseRedirect(self.get_success_url())
 
+	def get_context_data(self, **kwargs):
+		context = super(SignUpView, self).get_context_data(**kwargs)
+		context['title'] = 'SignUp'
+		return context
+
 
 class AuthenticationView(auth_views.LoginView):
 	form_class = LoginForm
@@ -53,6 +58,11 @@ class AuthenticationView(auth_views.LoginView):
 			return HttpResponseRedirect(reverse('main:homepage'))
 		else:
 			return super(AuthenticationView, self).dispatch(request, *args, **kwargs)
+
+	def get_context_data(self, **kwargs):
+		context = super(AuthenticationView, self).get_context_data(**kwargs)
+		context['title'] = 'Login'
+		return context
 
 
 class LogoutView(auth_views.LogoutView):

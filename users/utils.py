@@ -9,6 +9,7 @@ userModel = get_user_model()
 
 
 class EmailConfirmationCode:
+    """ generating and submitting email code """
     def send_email_code(self, email: str):
         context = self.get_email_context(email)
         send_email.delay(
@@ -24,7 +25,7 @@ class EmailConfirmationCode:
             'code': self.get_code(email),
         }
         return context
-
+    
     def get_code(self, email):
         try:
             code = EmailCode.objects.get(email=email)
