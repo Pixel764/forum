@@ -1,5 +1,5 @@
 import os
-
+from PIL import Image
 from datetime import timedelta
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils import timezone
@@ -10,7 +10,7 @@ from django.urls import reverse
 import random
 
 profile_image_folder_name = 'ProfileImages'
-profile_image_file_name = 'default.jpg'
+default_profile_image_file_name = 'default.jpg'
 
 
 class CustomUserModel(AbstractUser):
@@ -28,8 +28,8 @@ class CustomUserModel(AbstractUser):
 	)
 	profile_image = models.ImageField(
 		upload_to=profile_image_folder_name,
-		default=f'{profile_image_folder_name}/{profile_image_file_name}',
-		validators=[FileExtensionValidator(allowed_extensions=['png', 'jpeg', 'jpg', 'gif', 'bmp'])]
+		default=f'{profile_image_folder_name}/{default_profile_image_file_name}',
+		validators=[FileExtensionValidator(allowed_extensions=['png', 'jpg'])]
 	)
 	email = models.EmailField(unique=True, null=False, max_length=50)
 	email_confirmed = models.BooleanField(default=False)
@@ -37,32 +37,37 @@ class CustomUserModel(AbstractUser):
 	first_name = None
 
 	class Meta:
-		db_table = 'users_user_model'
+		db_table = 'users'
 		verbose_name = 'User'
 
 	def get_absolute_url(self):
 		return reverse('users:profile', kwargs={'username': self.username})
 
 	def save(self, *args, **kwargs):
-		obj = CustomUserModel.objects.filter(pk=self.pk)
-		if obj:
-			self.delete_profile_image_from_storage(obj[0])
-		return super(CustomUserModel, self).save(*args, **kwargs)
+		obj = CustomUserModel.objects.get(pk=self.pk)
+		super(CustomUserModel, self).save(*args, **kwargs)
+
+		if self.profile_image.name != obj.profile_image.name:
+			self.delete_profile_image_from_storage(obj)
+
+			loaded_img = Image.open(self.profile_image.path)
+			if loaded_img.height > 300 or loaded_img.width > 300:
+				if loaded_img.mode != 'RGB':
+					loaded_img = loaded_img.convert('RGB')
+				loaded_img = loaded_img.resize((300, 300))
+				loaded_img.save(self.profile_image.path)
 
 	def delete(self, using=None, keep_parents=False):
-		self.delete_profile_image_from_storage(CustomUserModel.objects.get(pk=self.pk), user_delete=True)
-		return super(CustomUserModel, self).delete()
+		self.delete_profile_image_from_storage(CustomUserModel.objects.get(pk=self.pk))
+		super(CustomUserModel, self).delete()
 
-	def delete_profile_image_from_storage(self, user, **kwargs):
-		def delete_image():
+	@staticmethod
+	def delete_profile_image_from_storage(user):
+		if user.profile_image.name != f'{profile_image_folder_name}/{default_profile_image_file_name}':
 			try:
 				os.remove(user.profile_image.path)
 			except FileNotFoundError:
 				pass
-
-		if kwargs.get('user_delete', False) or user.profile_image.name != self.profile_image.name:
-			if user.profile_image.name != f'{profile_image_folder_name}/{profile_image_file_name}':
-				delete_image()
 
 
 class EmailCode(models.Model):
@@ -71,7 +76,7 @@ class EmailCode(models.Model):
 	expire_date = models.DateTimeField()
 
 	class Meta:
-		db_table = 'users_email_code'
+		db_table = 'email_codes'
 
 	def __str__(self):
 		return str(self.code)

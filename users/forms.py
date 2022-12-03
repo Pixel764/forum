@@ -7,6 +7,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from captcha.fields import CaptchaField, CaptchaTextInput
+from django.core.files.images import get_image_dimensions
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from .models import CustomUserModel
@@ -29,9 +30,7 @@ class LoginForm(AuthenticationForm):
     captcha = CaptchaField(widget=CaptchaTextInput(attrs={'class': 'form-control w-25'}))
 
     error_messages = {
-        'invalid_login':
-            'Invalid username or password.'
-        ,
+        'invalid_login': 'Invalid username or password.',
         'inactive': 'This account is inactive',
     }
 
@@ -75,7 +74,16 @@ class EditProfileForm(forms.ModelForm):
 
     def clean_profile_image(self):
         img = self.cleaned_data['profile_image']
-        img_name, img_suffix = self.cleaned_data['profile_image'].name.split('.')
+        width, height = get_image_dimensions(img)
+
+        if width < 100 or height < 100:
+            raise ValidationError('Image must be not smaller then 100x100')
+
+        img_name = self.cleaned_data['profile_image'].name.split('.')[0]
+        img.name = f'{img_name}.jpg'
+        return img
+
+        img_name = img.name.split('.')[0]
         img.name = f'{img_name}.jpg'
         return img
 
@@ -85,7 +93,9 @@ class ProfileVerificationForm(forms.Form):
         self.user_password = kwargs.pop('user_hashed_password')
         super(ProfileVerificationForm, self).__init__(*args, **kwargs)
 
-    password = forms.CharField(label='Current password', widget=forms.PasswordInput(attrs={'class': 'form-control w-25'}))
+    password = forms.CharField(
+        label='Current password', widget=forms.PasswordInput(attrs={'class': 'form-control w-25'})
+    )
 
     def clean_password(self):
         password = self.cleaned_data['password']
