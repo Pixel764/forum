@@ -4,8 +4,14 @@
 {% block content %}
 
 {% if user.is_authenticated %}
-<div class="mt-2 mb-1">
+<div class="d-flex justify-content-between mt-2 mb-1">
     <a class="btn btn-success" href="{% url 'forum:post_create' %}">Add post</a>
+    <form class="d-inline-flex" method="get" action="{% url 'main:search_posts' %}">
+        <div class="input-group">
+            <input class="form-control w-50 rounded" type="search" name="q">
+            <button type="button" class="btn btn-outline-primary">Search</button>
+        </div>
+    </form>
 </div>
 {% endif %}
 
