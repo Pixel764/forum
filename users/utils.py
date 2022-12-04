@@ -25,7 +25,7 @@ class EmailConfirmationCode:
             'code': self.get_code(email),
         }
         return context
-    
+
     def get_code(self, email):
         try:
             code = EmailCode.objects.get(email=email)

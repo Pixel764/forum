@@ -44,12 +44,12 @@ class CustomUserModel(AbstractUser):
 		return reverse('users:profile', kwargs={'username': self.username})
 
 	def save(self, *args, **kwargs):
-		obj = CustomUserModel.objects.get(pk=self.pk)
 		super(CustomUserModel, self).save(*args, **kwargs)
+		obj = CustomUserModel.objects.get(pk=self.pk)
 
 		if self.profile_image.name != obj.profile_image.name:
 			self.delete_profile_image_from_storage(obj)
-
+	
 			loaded_img = Image.open(self.profile_image.path)
 			if loaded_img.height > 300 or loaded_img.width > 300:
 				if loaded_img.mode != 'RGB':
