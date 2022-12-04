@@ -19,10 +19,13 @@
             <h6>Last Change Date: {{ post.last_change_date }}</h6>
         {% endif %}
     </div>
+
+    <!-- Like and Dislike buttons -->
     <div>
-        <form name="post_like_form" method="post">
+        <form name="post_rating_form">
             {% csrf_token %}
-            <input class="btn btn-success" type="submit" name="like" value="Like {{ post.likes.count }}">
+            <input class="btn btn-success" action="{% url 'forum:post_rating' post_pk=post.pk status='like' %}" type="submit" name="like" value="&uarr; {{ post.likes.count }}">
+            <input class="btn btn-danger" action="{% url 'forum:post_rating' post_pk=post.pk status='dislike' %}" type="submit" name="dislike" value="&darr; {{ post.dislikes.count }}">
         </form>
     </div>
 </div>

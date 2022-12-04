@@ -17,28 +17,49 @@ $(document).ready(function(){
         }
     })
 
-    // ajax request for post like
-    const postLikeBtn = $('form[name=post_like_form] > input[name=like]')
+    // ajax request for post like and dislike
+    let loginURL = $('#auth_links > a[href*=login]').attr('href')
+    const csrf = $('form[name=post_rating_form] > input[name=csrfmiddlewaretoken]').val()
 
+    const postLikeBtn = $('form[name=post_rating_form] > input[name=like]')
     postLikeBtn.click(function(e){
         e.preventDefault()
 
-        csrf = $('form[name=post_like_form] > input[name=csrfmiddlewaretoken]').val()
-
         $.ajax({
-            url: window.location.href,
+            url: postLikeBtn.attr('action'),
             cache: false,
-            method: 'POST',
+            method: 'GET',
             data: {
                 'csrfmiddlewaretoken': csrf,
-                'like': ''
             },
             dataType: 'json',
             success: function(data){
-                postLikeBtn.attr({'value': `Like ${data.likes}`})
+                postDislikeBtn.attr({'value': `↓ ${data.dislikes}`})
+                postLikeBtn.attr({'value': `↑ ${data.likes}`})
             },
             error: function(data){
-                let loginURL = $('#auth_links > a[href*=login]').attr('href')
+                window.location.replace(loginURL)
+            }
+        })
+    })
+
+    const postDislikeBtn = $('form[name=post_rating_form] > input[name=dislike]')
+    postDislikeBtn.click(function(e){
+        e.preventDefault()
+
+        $.ajax({
+            url: postDislikeBtn.attr('action'),
+            cache: false,
+            method: 'GET',
+            data: {
+                'csrfmiddlewaretoken': csrf,
+            },
+            dataType: 'json',
+            success: function(data){
+                postLikeBtn.attr({'value': `↑ ${data.likes}`})
+                postDislikeBtn.attr({'value': `↓ ${data.dislikes}`})
+            },
+            error: function(data){
                 window.location.replace(loginURL)
             }
         })

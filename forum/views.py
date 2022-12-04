@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from django.urls import reverse_lazy
 from django.http import Http404, HttpResponseRedirect, JsonResponse
@@ -21,20 +22,12 @@ class PostPageView(FormMixin, DetailView):
 
 	def post(self, request, *args, **kwargs):
 		self.object = self.get_object()
+		form = self.get_form()
 
-		if 'like' in self.request.POST.keys():
-			if self.object.likes.filter(pk=self.request.user.pk):
-				self.object.likes.remove(self.request.user)
-			else:
-				self.object.likes.add(self.request.user)
-			return JsonResponse({'likes': self.object.likes.count()})
+		if form.is_valid():
+			return self.form_valid(form)
 		else:
-			form = self.get_form()
-
-			if form.is_valid():
-				return self.form_valid(form)
-			else:
-				return self.form_invalid(form)
+			return self.form_invalid(form)
 
 	def get_context_data(self, **kwargs):
 		context = super(PostPageView, self).get_context_data(**kwargs)
@@ -54,6 +47,44 @@ class PostPageView(FormMixin, DetailView):
 		form.instance.author = self.request.user
 		form.save()
 		return HttpResponseRedirect(self.object.get_absolute_url())
+
+
+@login_required()
+def post_rating_view(request, post_pk, status):
+	accepted_status = ['like', 'dislike']
+
+	if status not in accepted_status:
+		raise Http404
+
+	try:
+		post = Post.objects.get(pk=post_pk)
+	except ObjectDoesNotExist:
+		return JsonResponse({'error': 'Post not found'})
+
+	if status == 'like':
+		set_like(post, request.user)
+	else:
+		set_dislike(post, request.user)
+
+	return JsonResponse({'likes': post.likes.count(), 'dislikes': post.dislikes.count()})
+
+
+def set_like(post, user):
+	if post.likes.filter(pk=user.pk):
+		post.likes.remove(user)
+	else:
+		if post.dislikes.filter(pk=user.pk):
+			post.dislikes.remove(user)
+		post.likes.add(user)
+
+
+def set_dislike(post, user):
+	if post.dislikes.filter(pk=user.pk):
+		post.dislikes.remove(user)
+	else:
+		if post.likes.filter(pk=user.pk):
+			post.likes.remove(user)
+		post.dislikes.add(user)
 
 
 @method_decorator(login_required, name='dispatch')

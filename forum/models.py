@@ -11,6 +11,7 @@ class Post(models.Model):
     last_change_date = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(to=CustomUserModel, on_delete=models.CASCADE, blank=True)
     likes = models.ManyToManyField(to=CustomUserModel, related_name='liked_posts', blank=True)
+    dislikes = models.ManyToManyField(to=CustomUserModel, related_name='disliked_posts', blank=True)
 
     class Meta:
         db_table = 'posts'
