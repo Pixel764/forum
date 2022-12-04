@@ -19,20 +19,6 @@ class PostPageViewTest(TestCase):
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual(response.context['post'], self.post)
 
-	"""def test_like_post(self):
-		self.client.force_login(self.user)
-		response = self.client.post(reverse('forum:post_page', kwargs={'post_pk': self.post.pk}), data={'like': ''},
-									follow=True)
-		self.assertTrue(Post.objects.get(pk=self.post.pk).likes.filter(pk=self.user.pk))
-		self.assertEqual(Post.objects.get(pk=self.post.pk).likes.count(), 1)
-
-	def test_remove_like(self):
-		self.client.force_login(self.user)
-		self.post.likes.add(self.user)
-		response = self.client.post(reverse('forum:post_page', kwargs={'post_pk': self.post.pk}), data={'like': ''},
-									follow=True)
-		self.assertEqual(Post.objects.get(pk=self.post.pk).likes.count(), 0)"""
-
 	def test_create_comment(self):
 		self.client.force_login(user=self.user)
 		self.client.post(reverse('forum:post_page', kwargs={'post_pk': self.post.pk}),
