@@ -61,7 +61,45 @@ class PostCRUDAPITest(TestCase):
 		self.assertTrue('created-post' in response_content_in_dict)
 
 
-class UserPostsAPI(TestCase):
+class PostRatingAPITest(TestCase):
+	def setUp(self) -> None:
+		self.user = create_user()
+		self.post = create_post(author=self.user)
+
+	def test_set_like(self):
+		self.client.force_login(self.user)
+		response = self.client.get(reverse('api:post_rating', kwargs={'pk': self.post.pk, 'status': 'like'}))
+		response_content_in_dict = bytes_to_dict(response.content)
+		self.assertTrue(Post.objects.get(pk=self.post.pk).likes.filter(pk=self.user.pk))
+		self.assertEqual(Post.objects.get(pk=self.post.pk).likes.count(), 1)
+		self.assertEqual(response_content_in_dict['likes'], 1)
+
+	def test_remove_like(self):
+		self.client.force_login(self.user)
+		self.post.likes.add(self.user)
+		response = self.client.get(reverse('api:post_rating', kwargs={'pk': self.post.pk, 'status': 'like'}))
+		response_content_in_dict = bytes_to_dict(response.content)
+		self.assertEqual(Post.objects.get(pk=self.post.pk).likes.count(), 0)
+		self.assertEqual(response_content_in_dict['likes'], 0)
+
+	def test_set_dislike(self):
+		self.client.force_login(self.user)
+		response = self.client.get(reverse('api:post_rating', kwargs={'pk': self.post.pk, 'status': 'dislike'}))
+		response_content_in_dict = bytes_to_dict(response.content)
+		self.assertTrue(Post.objects.get(pk=self.post.pk).dislikes.filter(pk=self.user.pk))
+		self.assertEqual(Post.objects.get(pk=self.post.pk).dislikes.count(), 1)
+		self.assertEqual(response_content_in_dict['dislikes'], 1)
+
+	def test_remove_dislike(self):
+		self.client.force_login(self.user)
+		self.post.dislikes.add(self.user)
+		response = self.client.get(reverse('api:post_rating', kwargs={'pk': self.post.pk, 'status': 'dislike'}))
+		response_content_in_dict = bytes_to_dict(response.content)
+		self.assertEqual(Post.objects.get(pk=self.post.pk).dislikes.count(), 0)
+		self.assertEqual(response_content_in_dict['dislikes'], 0)
+
+
+class UserPostsAPITest(TestCase):
 	def setUp(self) -> None:
 		self.user = create_user()
 

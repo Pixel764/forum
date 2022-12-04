@@ -24,8 +24,8 @@
     <div>
         <form name="post_rating_form">
             {% csrf_token %}
-            <input class="btn btn-success" action="{% url 'forum:post_rating' post_pk=post.pk status='like' %}" type="submit" name="like" value="&uarr; {{ post.likes.count }}">
-            <input class="btn btn-danger" action="{% url 'forum:post_rating' post_pk=post.pk status='dislike' %}" type="submit" name="dislike" value="&darr; {{ post.dislikes.count }}">
+            <input class="btn btn-success" action="{% url 'api:post_rating' pk=post.pk status='like' %}" type="submit" name="like" value="&uarr; {{ post.likes.count }}">
+            <input class="btn btn-danger" action="{% url 'api:post_rating' pk=post.pk status='dislike' %}" type="submit" name="dislike" value="&darr; {{ post.dislikes.count }}">
         </form>
     </div>
 </div>

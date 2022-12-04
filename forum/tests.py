@@ -31,36 +31,6 @@ class PostPageViewTest(TestCase):
 		self.assertTrue(form.is_valid())
 
 
-class PostRatingViewTest(TestCase):
-	def setUp(self) -> None:
-		self.user = create_user()
-		self.post = create_post(author=self.user)
-
-	def test_set_like(self):
-		self.client.force_login(self.user)
-		response = self.client.get(reverse('forum:post_rating', kwargs={'post_pk': self.post.pk, 'status': 'like'}))
-		self.assertTrue(Post.objects.get(pk=self.post.pk).likes.filter(pk=self.user.pk))
-		self.assertEqual(Post.objects.get(pk=self.post.pk).likes.count(), 1)
-
-	def test_remove_like(self):
-		self.client.force_login(self.user)
-		self.post.likes.add(self.user)
-		response = self.client.get(reverse('forum:post_rating', kwargs={'post_pk': self.post.pk, 'status': 'like'}))
-		self.assertEqual(Post.objects.get(pk=self.post.pk).likes.count(), 0)
-
-	def test_set_dislike(self):
-		self.client.force_login(self.user)
-		response = self.client.get(reverse('forum:post_rating', kwargs={'post_pk': self.post.pk, 'status': 'dislike'}))
-		self.assertTrue(Post.objects.get(pk=self.post.pk).dislikes.filter(pk=self.user.pk))
-		self.assertEqual(Post.objects.get(pk=self.post.pk).dislikes.count(), 1)
-
-	def test_remove_dislike(self):
-		self.client.force_login(self.user)
-		self.post.dislikes.add(self.user)
-		response = self.client.get(reverse('forum:post_rating', kwargs={'post_pk': self.post.pk, 'status': 'dislike'}))
-		self.assertEqual(Post.objects.get(pk=self.post.pk).dislikes.count(), 0)
-
-
 class PostCreateViewTest(TestCase):
 	def setUp(self) -> None:
 		self.user = create_user()
