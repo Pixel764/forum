@@ -4,27 +4,47 @@
 {% block content %}
 
 {% if user.is_authenticated %}
-<div class="d-flex justify-content-between mt-2 mb-1">
-    <a class="btn btn-success" href="{% url 'forum:post_create' %}">Add post</a>
-    <form class="d-inline-flex" method="get" action="{% url 'main:search_posts' %}">
-        <div class="input-group">
-            <input class="form-control w-50 rounded" type="search" name="q">
-            <button type="button" class="btn btn-outline-primary">Search</button>
-        </div>
-    </form>
-</div>
+    <div class="d-flex justify-content-between mt-2 mb-1">
+        <a class="btn btn-success" href="{% url 'forum:post_create' %}">Add post</a>
+        <form method="get" action="{% if selected_category %}{% url 'main:search_category_posts' selected_category.title %}{% else %}{% url 'main:search_posts' %}{% endif %}">
+            <div class="input-group">
+                <input class="form-control w-50 rounded" type="search" name="q">
+                <button type="submit" class="btn btn-outline-primary">Search</button>
+            </div>
+        </form>
+    </div>
 {% endif %}
 
-<div>
-    {% if posts %}
-        {% for post in posts %}
-            <div class="border border-secondary rounded mt-2 mb-2 pt-1 pb-1 ps-2">
-                <a href="{% url 'forum:post_page' post.pk %}">{{ post.title }}</a>
-            </div>
-        {% endfor %}
-    {% else %}
-        <h3 class="text-center">There are no posts yet.</h3>
-    {% endif %}
+<div class="d-flex justify-content-between">
+    <div id="posts_list" class="w-70 d-inline-block">
+        {% if posts %}
+            <div class="border-top border-right border-left mt-3 p-3 bg-dark"></div>
+            {% for post in posts %}
+                <div class="border border-secondary pt-1 pb-1 ps-3">
+                    <a href="{% url 'forum:post_page' post.pk %}">{{ post.title }}</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h3 class="text-center">There are no posts yet.</h3>
+        {% endif %}
+    </div>
+
+    <div id="categories_list" class="fw-bold w-20 d-inline-block">
+            {% if categories %}
+            <div class="border-top border-right border-left mt-3 p-3 bg-dark"></div>
+            {% for category in categories %}
+                {% if category.pk == selected_category.pk %}
+                    <div class="border border-secondary bg-secondary pt-1 pb-1 ps-2">
+                        <a href="{% url 'forum:category_posts' category.title %}" class="text-white">{{ category.title }}</a>
+                    </div>
+                {% else %}
+                    <div class="border border-secondary pt-1 pb-1 ps-2">
+                        <a class="link-secondary" href="{% url 'forum:category_posts' category.title %}">{{ category.title }}</a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
 </div>
 
 {% if page_obj.has_other_pages %}

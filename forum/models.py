@@ -1,10 +1,28 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from users.models import CustomUserModel
 from ckeditor.fields import RichTextField
 
 
+class Category(models.Model):
+    title = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        db_table = 'categories'
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return self.title
+
+    def clean(self):
+        if len(self.title.split(' ')) > 1:
+            raise ValidationError('The title must be united. Example "%s"' % ('-'.join(self.title.split(' '))))
+        super(Category, self).clean()
+
+
 class Post(models.Model):
+    category = models.ForeignKey(to=Category, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     content = RichTextField(max_length=20000)
     published_date = models.DateTimeField(auto_now_add=True)

@@ -1,15 +1,17 @@
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST
-from django.views.generic import DetailView, CreateView, DeleteView, UpdateView
+from django.views.generic import DetailView, CreateView, DeleteView, UpdateView, ListView
 from django.views.generic.edit import FormMixin
-from .models import Post, Comment
+from .models import Post, Comment, Category
 from .forms import CreateAndEditPostForm, CommentForm
 from django.contrib import messages
+from .utils import CategoryContextMixin
 
 
 @method_decorator(login_required, name='post')
@@ -32,7 +34,7 @@ class PostPageView(FormMixin, DetailView):
 	def get_context_data(self, **kwargs):
 		context = super(PostPageView, self).get_context_data(**kwargs)
 		context['paginator'] = Paginator(
-			self.object.comment_set.values('author__username', 'author__id', 'pk', 'text', 'published_date'),
+			self.object.comment_set.values('author__username', 'author__profile_image', 'author__id', 'pk', 'text', 'published_date'),
 			self.paginate_by
 		)
 		context['page_obj'] = self.get_page_obj(context['paginator'], self.request.GET.get('page', 1))
@@ -122,3 +124,20 @@ class CommentDeleteView(DeleteView):
 		self.object.delete()
 		messages.add_message(self.request, messages.SUCCESS, 'Comment was successfully deleted')
 		return HttpResponseRedirect(self.object.get_absolute_url())
+
+
+class CategoryPostsView(CategoryContextMixin, ListView):
+	context_object_name = 'posts'
+	template_name = 'index.html'
+	paginate_by = 30
+
+	def get_queryset(self):
+		return Post.objects.filter(
+			category__title=self.kwargs['category_title'], published_date__lte=timezone.now()
+		).values('title', 'pk')
+
+	def get_context_data(self, *, object_list=None, **kwargs):
+		context = super(CategoryPostsView, self).get_context_data(**kwargs)
+		category_context = self.get_category_context(selected_category=get_object_or_404(Category, title=self.kwargs['category_title']))
+		context = dict(list(context.items()) + list(category_context.items()))
+		return context

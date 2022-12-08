@@ -2,11 +2,16 @@ from django.contrib import admin
 from .models import *
 
 
+@admin.register(Category)
+class CategoryAdminPanel(admin.ModelAdmin):
+    list_display = ['title']
+
+
 @admin.register(Post)
 class PostAdminPanel(admin.ModelAdmin):
     list_display_links = ['title']
     list_display = ['id', 'title', 'author', 'published_date']
-    filter_horizontal = ['likes']
+    filter_horizontal = ['likes', 'dislikes']
     raw_id_fields = ['author']
     search_fields = ['id']
     search_help_text = 'Search by id'

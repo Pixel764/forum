@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load main_tags %}
 
 {% block content %}
 
@@ -55,7 +56,10 @@
 {% for comment in page_obj.object_list %}
     <div class="border border-dark rounded mt-3 pt-1 pe-3 ps-3">
         <div class="d-flex justify-content-between">
-            <a href="{% url 'users:profile' comment.author__username %}">{{ comment.author__username }}</a>
+            <a href="{% url 'users:profile' comment.author__username %}">
+                <img class="border border-dark" src="{% get_media_prefix %}{{ comment.author__profile_image }}" width="50" height="50">
+                <span class="align-top">{{ comment.author__username }}</span>
+            </a>
             <form name="commentDeleteForm" method="post" action="{% url 'forum:comment_delete' comment.pk %}">
                 {% csrf_token %}
                 <input class="btn btn-danger" type="submit" value="Delete">

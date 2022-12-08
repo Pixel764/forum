@@ -11,4 +11,7 @@ urlpatterns = [
 
     # Comments
     path('comment/<int:comment_pk>/delete/', views.CommentDeleteView.as_view(), name='comment_delete'),
+
+    # Categories
+    path('category/<str:category_title>/', views.CategoryPostsView.as_view(), name='category_posts'),
 ]

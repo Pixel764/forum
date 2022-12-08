@@ -5,10 +5,11 @@ from .models import Post, Comment
 class CreateAndEditPostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'category', 'content']
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-select form-select-sm'})
         }
 
 
