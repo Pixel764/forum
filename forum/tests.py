@@ -39,7 +39,7 @@ class PostCreateViewTest(TestCase):
 		self.client.force_login(self.user)
 
 	def test_create_post(self):
-		response = response = self.client.post(
+		response = self.client.post(
 			reverse('forum:post_create'),
 			data={'title': 'Post title', 'content': 'Post text', 'author': self.user, 'category': f'{self.category.pk}'},
 			follow=True

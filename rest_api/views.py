@@ -2,10 +2,10 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from .permissions import UpdateIfAuthorOrAdmin
-from forum.models import Post
-from .serializers import PostSerializer
+from forum.models import Post, Category
+from .serializers import PostSerializer, CategorySerializer
 from .pagination import PostPagination
-from rest_framework.generics import GenericAPIView, RetrieveAPIView
+from rest_framework.generics import GenericAPIView, RetrieveAPIView, ListAPIView
 
 
 class PostCRUDAPI(ModelViewSet):
@@ -99,7 +99,19 @@ class PostRatingAPI(RetrieveAPIView):
 			post.dislikes.add(user)
 
 
-# User api views
+class CategoryAPI(ModelViewSet):
+	queryset = Category.objects.all()
+	pagination_class = PostPagination
+	serializer_class = CategorySerializer
+
+	def retrieve(self, request, *args, **kwargs):
+		category = self.get_object()
+		queryset = category.post_set.all()
+		page = self.paginate_queryset(queryset)
+		serializer = PostSerializer(page, many=True)
+		return self.paginator.get_paginated_response(serializer.data)
+
+
 class UserPostsAPI(GenericAPIView):
 	queryset = Post.objects.all()
 	pagination_class = PostPagination

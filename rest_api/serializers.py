@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from forum.models import Post
+from forum.models import Post, Category
 from django.utils import timezone
 
 
@@ -28,6 +28,14 @@ class PostSerializer(serializers.ModelSerializer):
 	def update(self, instance, validated_data):
 		instance.title = validated_data.get('title', instance.title)
 		instance.content = validated_data.get('content', instance.content)
+		instance.category = validated_data.get('category', instance.category)
 		instance.last_change_date = timezone.now()
 		instance.save()
 		return instance
+
+
+class CategorySerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Category
+		exclude = []
+		read_only = ['id', 'title']

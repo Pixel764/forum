@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.urls import reverse
 import json
 from users.tests import create_user
-from forum.tests import create_post
+from forum.tests import create_post, create_category
 from forum.models import Post
 
 
@@ -14,30 +14,31 @@ def bytes_to_dict(content: bytes):
 class PostCRUDAPITest(TestCase):
 	def setUp(self) -> None:
 		self.user = create_user()
+		self.category = create_category('Category1')
 
 	def test_all_posts(self):
-		create_post(self.user)
-		create_post(self.user)
+		create_post(self.user, category=self.category)
+		create_post(self.user, category=self.category)
 		response = self.client.get(reverse('api:all_posts'))
 		response_content_in_dict = bytes_to_dict(response.content)
 		self.assertEqual(response_content_in_dict['count'], 2)
 
 	def test_amount_posts(self):
-		create_post(self.user)
-		create_post(self.user)
+		create_post(self.user, category=self.category)
+		create_post(self.user, category=self.category)
 		response = self.client.get(reverse('api:amount_posts', kwargs={'amount': 1}))
 		response_content_in_dict = bytes_to_dict(response.content)
 		self.assertEqual(response_content_in_dict['count'], 1)
 
 	def test_get_post(self):
-		post = create_post(self.user)
+		post = create_post(self.user, category=self.category)
 		response = self.client.get(reverse('api:get_edit_delete_post', kwargs={'pk': post.pk}))
 		response_content_in_dict = bytes_to_dict(response.content)
 		self.assertTrue('post' in response_content_in_dict)
 
 	def test_edit_post(self):
 		self.client.force_login(self.user)
-		post = create_post(self.user)
+		post = create_post(self.user, category=self.category)
 		data = {
 			'title': 'New title'
 		}
@@ -48,23 +49,27 @@ class PostCRUDAPITest(TestCase):
 
 	def test_delete_post(self):
 		self.client.force_login(self.user)
-		post = create_post(self.user)
+		post = create_post(self.user, category=self.category)
 		response = self.client.delete(reverse('api:get_edit_delete_post', kwargs={'pk': post.pk}))
 		self.assertFalse(Post.objects.all())
 
 	def test_create_post(self):
 		self.client.force_login(self.user)
 		response = self.client.post(
-			reverse('api:create_post'), data={'title': 'New post', 'content': 'Post content'}, follow=True
+			reverse('api:create_post'),
+			data={'title': 'New post', 'content': 'Post content', 'category': f'{self.category.pk}'},
+			follow=True
 		)
 		response_content_in_dict = bytes_to_dict(response.content)
 		self.assertTrue('created-post' in response_content_in_dict)
+		self.assertTrue(Post.objects.get(title='New post'))
 
 
 class PostRatingAPITest(TestCase):
 	def setUp(self) -> None:
+		self.category = create_category('Category1')
 		self.user = create_user()
-		self.post = create_post(author=self.user)
+		self.post = create_post(author=self.user, category=self.category)
 
 	def test_set_like(self):
 		self.client.force_login(self.user)
@@ -99,21 +104,45 @@ class PostRatingAPITest(TestCase):
 		self.assertEqual(response_content_in_dict['dislikes'], 0)
 
 
+class CategoryAPITest(TestCase):
+	def setUp(self) -> None:
+		self.author = create_user()
+		self.category1 = create_category('Category1')
+		self.category2 = create_category('Category2')
+		self.post = create_post(author=self.author, category=self.category2)
+
+	def test_categories_list(self):
+		response = self.client.get((reverse('api:categories_list')))
+		response_content_in_dict = bytes_to_dict(response.content)
+		self.assertEqual(response_content_in_dict['count'], 2)
+
+	def test_category_posts(self):
+		response1 = self.client.get(reverse('api:category_posts', kwargs={'pk': self.category1.pk}))
+		response2 = self.client.get(reverse('api:category_posts', kwargs={'pk': self.category2.pk}))
+		response_content_in_dict1 = bytes_to_dict(response2.content)
+		response_content_in_dict2 = bytes_to_dict(response2.content)
+		self.assertEqual(response_content_in_dict1['count'], 1)
+		self.assertEqual(response_content_in_dict2['count'], 1)
+
+
+
+
 class UserPostsAPITest(TestCase):
 	def setUp(self) -> None:
 		self.user = create_user()
+		self.category = create_category('Category1')
 
 	@freezegun.freeze_time('2021-01-01')
 	def test_user_posts(self):
-		create_post(self.user)
-		create_post(self.user)
+		create_post(self.user, category=self.category)
+		create_post(self.user, category=self.category)
 		response = self.client.get(reverse('api:user_posts', kwargs={'username': self.user.username}))
 		response_content_in_dict = bytes_to_dict(response.content)
 		self.assertEqual(response_content_in_dict['count'], 2)
 
 	def test_user_amount_posts(self):
-		create_post(self.user)
-		create_post(self.user)
+		create_post(self.user, category=self.category)
+		create_post(self.user, category=self.category)
 		response = self.client.get(
 			reverse('api:user_amount_posts', kwargs={'username': self.user.username, 'amount': 1})
 		)
