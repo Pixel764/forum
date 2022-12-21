@@ -10,6 +10,7 @@ urlpatterns = [
     path('post/create/', views.PostCreateView.as_view(), name='post_create'),
 
     # Comments
+    path('comment/<int:comment_pk>/edit/', views.CommentEditView.as_view(), name='comment_edit'),
     path('comment/<int:comment_pk>/delete/', views.CommentDeleteView.as_view(), name='comment_delete'),
 
     # Categories

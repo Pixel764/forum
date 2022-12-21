@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load main_tags %}
 
 {% block content %}
 
@@ -25,8 +24,8 @@
     <div>
         <form name="post_rating_form">
             {% csrf_token %}
-            <input class="btn btn-success" action="{% url 'api:post_rating' pk=post.pk status='like' %}" type="submit" name="like" value="&uarr; {{ post.likes.count }}">
-            <input class="btn btn-danger" action="{% url 'api:post_rating' pk=post.pk status='dislike' %}" type="submit" name="dislike" value="&darr; {{ post.dislikes.count }}">
+            <input class="btn btn-success" action="{% url 'api:post_rating' pk=post.pk status='like' %}" type="submit" name="post_like" value="&uarr; {{ post.likes.count }}">
+            <input class="btn btn-danger" action="{% url 'api:post_rating' pk=post.pk status='dislike' %}" type="submit" name="post_dislike" value="&darr; {{ post.dislikes.count }}">
         </form>
     </div>
 </div>
@@ -54,19 +53,35 @@
 
 <!-- Comments -->
 {% for comment in page_obj.object_list %}
-    <div class="border border-dark rounded mt-3 pt-1 pe-3 ps-3">
+    <div id="comment_{{ comment.pk }}" class="border border-dark rounded mt-3 pt-1 pe-3 ps-3">
         <div class="d-flex justify-content-between">
-            <a href="{% url 'users:profile' comment.author__username %}">
-                <img class="border border-dark" src="{% get_media_prefix %}{{ comment.author__profile_image }}" width="50" height="50">
-                <span class="align-top">{{ comment.author__username }}</span>
+            <a href="{% url 'users:profile' comment.author.username %}">
+                <img class="border border-dark" src="{{ comment.author.profile_image.url }}" width="50" height="50">
+                <span class="align-top">{{ comment.author.username }}</span>
             </a>
-            <form name="commentDeleteForm" method="post" action="{% url 'forum:comment_delete' comment.pk %}">
-                {% csrf_token %}
-                <input class="btn btn-danger" type="submit" value="Delete">
-            </form>
+            {% if user == comment.author %}
+                <div class="d-flex">
+                    <form class="me-2" name="commentDeleteForm" method="post" action="{% url 'forum:comment_delete' comment.pk %}">
+                        {% csrf_token %}
+                        <input class="btn btn-danger" type="submit" value="Delete">
+                    </form>
+                    <div>
+                        <a class="btn btn-primary" href="{% url 'forum:comment_edit' comment.pk %}">Edit</a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-        <p class="mt-2">{{ comment.text }}
-        <p class="fw-bold">{{ comment.published_date }}
+        <div></div>
+        <p class="mt-2"><span>{{ comment.text }}</span></p>
+        <p>Posted: <span class="fw-bold">{{ comment.published_date }}</span></p>
+        {% if comment.last_change_date != comment.published_date %}
+            <p>Last Change Date: <span class="fw-bold">{{ comment.last_change_date }}</span></p>
+        {% endif %}
+        <form class="mb-1" name="comment_rating_form">
+            <!--Jquery will take CSRF from 'post_rating_form'-->
+            <input class="btn btn-success" action="{% url 'api:comment_rating' pk=comment.pk status='like' %}" type="submit" name="comment_like" value="&uarr; {{ comment.likes.count }}">
+            <input class="btn btn-danger" action="{% url 'api:comment_rating' pk=comment.pk status='dislike' %}" type="submit" name="comment_dislike" value="&darr; {{ comment.dislikes.count }}">
+        </form>
     </div>
 {% endfor %}
 

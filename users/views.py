@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, Http404
+from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
@@ -115,8 +116,7 @@ class ProfileView(DetailView):
 	def get_context_data(self, **kwargs):
 		context = super(ProfileView, self).get_context_data(**kwargs)
 		context['title'] = self.request.user.username
-		context['paginator'] = Paginator(self.object.post_set.values('pk', 'title'),
-										 self.paginate_by)
+		context['paginator'] = Paginator(self.object.post_set.values('pk', 'title'), self.paginate_by)
 		context['page_obj'] = self.get_page_obj(context['paginator'], self.request.GET.get('page', 1))
 		return context
 

@@ -4,12 +4,18 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ObjectDoesNotExist
 from .tasks import send_email
 
-site = Site.objects.get_current()
+# Block exception "table not found" when make migration for first time
+try:
+    site = Site.objects.get_current()
+except:
+    pass
+
 userModel = get_user_model()
 
 
 class EmailConfirmationCode:
     """ generating and submitting email code """
+
     def send_email_code(self, email: str):
         context = self.get_email_context(email)
         send_email.delay(

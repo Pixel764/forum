@@ -16,6 +16,7 @@ class PostAdminPanel(admin.ModelAdmin):
     search_fields = ['id']
     search_help_text = 'Search by id'
     sortable_by = ['published_date']
+    fields = ['title', 'category', 'content', 'author', 'likes', 'dislikes']
 
     class Media:
         js = (
@@ -33,6 +34,8 @@ class CommentAdminPanel(admin.ModelAdmin):
     list_display = ['id', 'get_post_id', 'author']
     list_select_related = ['post', 'author']
     raw_id_fields = ['post', 'author']
+    filter_horizontal = ['likes', 'dislikes']
+    fields = ['post', 'text', 'author', 'likes', 'dislikes']
 
     def save_model(self, request, obj, form, change):
         if not request.POST['author']:

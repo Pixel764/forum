@@ -4,18 +4,24 @@ from . import views
 app_name = 'api'
 
 urlpatterns = [
-	path('posts/', views.PostCRUDAPI.as_view({'get': 'list'}), name='all_posts'),
-	path('posts/<int:amount>/', views.PostCRUDAPI.as_view({'get': 'list'}), name='amount_posts'),
-	path(
-		'post/<int:pk>/', views.PostCRUDAPI.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
-		name='get_edit_delete_post'
-	),
-	path('post/create/', views.PostCRUDAPI.as_view({'post': 'create'}), name='create_post'),
-	path('post/<int:pk>/<str:status>/', views.PostRatingAPI.as_view(), name='post_rating'),
+    path('posts/', views.PostAPI.as_view({'get': 'list'}), name='posts_all'),
+    path(
+        'post/<int:pk>/', views.PostAPI.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
+        name='post_get_edit_delete'
+    ),
+    path('post/create/', views.PostAPI.as_view({'post': 'create'}), name='post_create'),
+    path('post/<int:pk>/comments', views.CommentAPI.as_view({'get': 'list'}), name='post_comments'),
+    path('post/<int:pk>/<str:status>/', views.PostRatingAPI.as_view(), name='post_rating'),
 
-	path('categories/', views.CategoryAPI.as_view({'get': 'list'}), name='categories_list'),
-	path('category/<int:pk>/', views.CategoryAPI.as_view({'get': 'retrieve'}), name='category_posts'),
+    path(
+        'comment/<int:pk>/', views.CommentAPI.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}),
+        name='comment_get_edit_delete'
+    ),
+    path('comment/<int:pk>/<str:status>/', views.CommentRatingAPI.as_view(), name='comment_rating'),
+    path('comment/create/', views.CommentAPI.as_view({'post': 'create'}), name='comment_create'),
 
-	path('user/<str:username>/posts/', views.UserPostsAPI.as_view(), name='user_posts'),
-	path('user/<str:username>/posts/<int:amount>/', views.UserPostsAPI.as_view(), name='user_amount_posts'),
+    path('categories/', views.CategoryAPI.as_view({'get': 'list'}), name='categories_list'),
+    path('category/<int:pk>/', views.CategoryAPI.as_view({'get': 'retrieve'}), name='category_posts'),
+
+    path('user/<str:username>/posts/', views.UserPostsAPI.as_view(), name='user_posts'),
 ]

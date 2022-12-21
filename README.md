@@ -29,14 +29,13 @@ Create **.env** file in path with **manage.py**
 
 ****
 ## Tools used 
-- bootstrap
+- Bootstrap
 - Mysql
-- django
+- Django
     - django-ckeditor
     - django-simple-captcha
     - django-debug-toolbar
-    - django-rest-framework
-- Celery
-- Redis 
-- Javascript
-    - jquery
+- Django REST Framework
+- Celery 
+  - redis
+- Jquery
