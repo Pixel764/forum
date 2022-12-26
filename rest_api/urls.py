@@ -10,7 +10,7 @@ urlpatterns = [
         name='post_get_edit_delete'
     ),
     path('post/create/', views.PostAPI.as_view({'post': 'create'}), name='post_create'),
-    path('post/<int:pk>/comments', views.CommentAPI.as_view({'get': 'list'}), name='post_comments'),
+    path('post/<int:pk>/comments/', views.CommentAPI.as_view({'get': 'list'}), name='post_comments'),
     path('post/<int:pk>/<str:status>/', views.PostRatingAPI.as_view(), name='post_rating'),
 
     path(

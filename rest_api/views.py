@@ -73,7 +73,7 @@ class PostAPI(ModelViewSet):
 	permission_classes = [IsAuthenticatedOrReadOnly, UpdateIfAuthorOrAdmin]
 
 	def list(self, request, *args, **kwargs):
-		page = self.paginate_queryset(self.queryset)
+		page = self.paginate_queryset(self.queryset.select_related('author').prefetch_related('likes', 'dislikes'))
 		serializer = self.get_serializer(page, many=True)
 		return self.get_paginated_response(serializer.data)
 
@@ -114,7 +114,7 @@ class CommentAPI(ModelViewSet):
 	permission_classes = [IsAuthenticatedOrReadOnly, UpdateIfAuthorOrAdmin]
 
 	def list(self, request, *args, **kwargs):
-		queryset = self.get_object().comment_set.all()
+		queryset = get_object_or_404(Post, pk=self.kwargs['pk']).comment_set.select_related('author').prefetch_related('likes', 'dislikes')
 		page = self.paginate_queryset(queryset)
 		serializer = self.serializer_class(page, many=True)
 		return self.paginator.get_paginated_response(serializer.data)

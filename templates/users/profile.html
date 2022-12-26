@@ -10,7 +10,7 @@
 {% endif %}
 
 {% for post in page_obj.object_list %}
-    <div class="border border-secondary rounded mt-2 mb-2 pt-1 pb-1 ps-2">
+    <div style="overflow:hidden;" class="border border-secondary rounded mt-2 mb-2 pt-1 pb-1 ps-2">
         <a href="{% url 'forum:post_page' post.pk %}">{{ post.title }}</a>
     </div>
 {% endfor %}

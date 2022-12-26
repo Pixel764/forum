@@ -172,10 +172,10 @@ INTERNAL_IPS = [
 	'127.0.0.1'
 ]
 
-# Celery'
+# Celery
 CELERY_BROKER_URL = 'redis://' + os.getenv('REDIS_HOST') + ':' + os.getenv('REDIS_PORT')
 CELERY_RESULT_BACKEND = 'redis://' + os.getenv('REDIS_HOST') + ':' + os.getenv('REDIS_PORT')
-CELERY_ACCEPT_CONTEXT = ['application/json']
+CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 

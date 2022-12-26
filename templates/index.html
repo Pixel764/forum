@@ -34,7 +34,7 @@
             <div class="border-top border-right border-left mt-3 p-3 bg-dark"></div>
             {% for category in categories %}
                 {% if category.pk == selected_category.pk %}
-                    <div class="border border-secondary bg-secondary pt-1 pb-1 ps-2">
+                    <div style="overflow:hidden;" class="border border-secondary bg-secondary pt-1 pb-1 ps-2">
                         <a href="{% url 'forum:category_posts' category.title %}" class="text-white">{{ category.title }}</a>
                     </div>
                 {% else %}
