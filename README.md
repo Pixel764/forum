@@ -1,6 +1,8 @@
 # Forum site
 
 ### Site on python *( django )*
+**CSS is Without mobile adaptation**
+<br>
 
 **Install and run virtual environment**
 > pipenv shell

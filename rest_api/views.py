@@ -1,3 +1,5 @@
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -15,6 +17,7 @@ class CategoryAPI(ModelViewSet):
 	pagination_class = CustomPagination
 	serializer_class = CategorySerializer
 
+	@method_decorator(cache_page(60 * 10))
 	def retrieve(self, request, *args, **kwargs):
 		category = self.get_object()
 		queryset = category.post_set.all()
@@ -72,11 +75,13 @@ class PostAPI(ModelViewSet):
 	pagination_class = CustomPagination
 	permission_classes = [IsAuthenticatedOrReadOnly, UpdateIfAuthorOrAdmin]
 
+	@method_decorator(cache_page(60 * 10))
 	def list(self, request, *args, **kwargs):
 		page = self.paginate_queryset(self.queryset.select_related('author').prefetch_related('likes', 'dislikes'))
 		serializer = self.get_serializer(page, many=True)
 		return self.get_paginated_response(serializer.data)
 
+	@method_decorator(cache_page(60 * 10))
 	def retrieve(self, request, *args, **kwargs):
 		instance = self.get_object()
 		serializer = self.serializer_class(instance)
@@ -113,12 +118,14 @@ class CommentAPI(ModelViewSet):
 	serializer_class = CommentSerializer
 	permission_classes = [IsAuthenticatedOrReadOnly, UpdateIfAuthorOrAdmin]
 
+	@method_decorator(cache_page(60 * 10))
 	def list(self, request, *args, **kwargs):
 		queryset = get_object_or_404(Post, pk=self.kwargs['pk']).comment_set.select_related('author').prefetch_related('likes', 'dislikes')
 		page = self.paginate_queryset(queryset)
 		serializer = self.serializer_class(page, many=True)
 		return self.paginator.get_paginated_response(serializer.data)
 
+	@method_decorator(cache_page(60 * 10))
 	def retrieve(self, request, *args, **kwargs):
 		instance = self.get_object()
 		serializer = self.serializer_class(instance)
@@ -154,6 +161,7 @@ class UserPostsAPI(GenericAPIView):
 	pagination_class = CustomPagination
 	serializer_class = PostSerializer
 
+	@method_decorator(cache_page(60 * 10))
 	def get(self, request, *args, **kwargs):
 		queryset = self.queryset.filter(author__username=kwargs.get('username'))
 		page = self.paginate_queryset(queryset)
