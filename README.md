@@ -1,6 +1,5 @@
-# Forum site
+# Forum on django
 
-### Site on python *( django )*
 **CSS is Without mobile adaptation**
 <br>
 
