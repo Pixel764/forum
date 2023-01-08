@@ -10,6 +10,18 @@
 **Install dependencies**
 > pipenv install
 
+**Redis** <br>
+Install and run
+> https://redis.io/docs/getting-started/
+
+**Run celery** <br>
+> celery -A project.celery worker -l info
+
+Windows:
+> celery -A project.celery worker -l info -P gevent
+
+
+
 ****
 ### env Configuration
 Create **.env** file in path with **manage.py**

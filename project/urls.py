@@ -19,6 +19,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 
+handler400 = 'main.views.http400'
+handler403 = 'main.views.http403'
+handler404 = 'main.views.http404'
+handler500 = 'main.views.http500'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('rest_api.urls')),
