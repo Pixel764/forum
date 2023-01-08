@@ -8,7 +8,7 @@ from .tasks import send_email
 try:
     site = Site.objects.get_current()
 except:
-    pass
+    print('Do migrations! python manage.py migrate')
 
 userModel = get_user_model()
 
@@ -17,7 +17,7 @@ class EmailConfirmationCode:
     """ generating and submitting email code """
 
     def send_email_code(self, email: str):
-        context = self.get_email_context(email)
+        context = self.__get_email_context(email)
         send_email.delay(
             'Code for email confirmation',
             'users/email/email_change_message.html',
@@ -25,14 +25,14 @@ class EmailConfirmationCode:
             context
         )
 
-    def get_email_context(self, email):
+    def __get_email_context(self, email):
         context = {
             'site_name': site.name,
-            'code': self.get_code(email),
+            'code': self.__get_code(email),
         }
         return context
 
-    def get_code(self, email):
+    def __get_code(self, email):
         try:
             code = EmailCode.objects.get(email=email)
         except ObjectDoesNotExist:

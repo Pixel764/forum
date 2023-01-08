@@ -20,7 +20,8 @@ Install and run
 Windows:
 > celery -A project.celery worker -l info -P gevent
 
-
+**Run celery beat**
+> celery -A project.celery beat
 
 ****
 ### env Configuration

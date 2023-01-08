@@ -50,16 +50,16 @@ class SearchView(CategoryContextMixin, ListView):
 
 # Http handlers views
 def http400(request, exception):
-    return render(request, 'http/400.html')
+    return render(request, 'http/400.html', status=400)
 
 
 def http403(request, exception):
-    return render(request, 'http/403.html')
+    return render(request, 'http/403.html', status=403)
 
 
 def http404(request, exception):
-    return render(request, 'http/404.html')
+    return render(request, 'http/404.html', status=404)
 
 
 def http500(request):
-    return render(request, 'http/500.html')
+    return render(request, 'http/500.html', status=500)
